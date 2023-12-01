@@ -15,4 +15,5 @@ type Person_Database interface {
 	ErrTest(context.Context) error
 	Autentication(context.Context, entity.Trc_req_one) (bool, error)
 	UpdateBalance(context.Context, entity.Transaction) bool
+	GetFriends(context.Context, entity.Login_req) []entity.Person
 }
