@@ -3,6 +3,7 @@ package person
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"zhifubao/domain/entity"
 	"zhifubao/domain/usecases"
 
@@ -19,6 +20,7 @@ type Handler interface {
 	NewPerson(*gin.Context)
 	Login(*gin.Context)
 	Logout(*gin.Context)
+	GetFriends(*gin.Context)
 }
 
 func NewHandler(uc usecases.Person_Usecase, router *gin.Engine) *RealHandler {
@@ -32,6 +34,7 @@ func (hdl *RealHandler) Standby(ctx context.Context) {
 	hdl.router.POST("/newperson", hdl.NewPerson)
 	hdl.router.PATCH("/login", hdl.Login)
 	hdl.router.PATCH("/logout", hdl.Logout)
+	hdl.router.GET("/friends", hdl.GetFriends)
 }
 
 func (hdl *RealHandler) NewPerson(c *gin.Context) {
@@ -43,15 +46,22 @@ func (hdl *RealHandler) NewPerson(c *gin.Context) {
 }
 
 func (hdl *RealHandler) Login(c *gin.Context) {
-	var newperson entity.Login_req
-	c.BindJSON(&newperson)
-	code := hdl.usecase.Login(c, newperson)
+	var person entity.Login_req
+	c.BindJSON(&person)
+	code := hdl.usecase.Login(c, person)
 	c.IndentedJSON(code, "Successfully Login")
 }
 
 func (hdl *RealHandler) Logout(c *gin.Context) {
-	var newperson entity.Login_req
-	c.BindJSON(&newperson)
-	code := hdl.usecase.Logout(c, newperson)
+	var person entity.Login_req
+	c.BindJSON(&person)
+	code := hdl.usecase.Logout(c, person)
 	c.IndentedJSON(code, "Succesfully Logout")
+}
+
+func (hdl *RealHandler) GetFriends(c *gin.Context) {
+	var person entity.Login_req
+	c.BindJSON(&person)
+	result := hdl.usecase.GetFriends(c, person)
+	c.IndentedJSON(http.StatusOK, result)
 }

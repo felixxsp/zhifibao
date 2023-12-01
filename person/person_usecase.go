@@ -48,3 +48,7 @@ func (uc *RealUsecase) Logout(ctx context.Context, info entity.Login_req) int {
 	}
 	return 400
 }
+
+func (uc *RealUsecase) GetFriends(ctx context.Context, source entity.Login_req) []entity.Person {
+	return uc.datalayer.GetPerson(ctx, source).Friends
+}
