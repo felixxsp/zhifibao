@@ -2,14 +2,16 @@ package person
 
 import (
 	"context"
-	"只服宝/entity"
+	"fmt"
+	"zhifubao/domain/entity"
+	"zhifubao/domain/usecases"
 
 	"github.com/gin-gonic/gin"
 )
 
 type RealHandler struct {
 	router  *gin.Engine
-	usecase Usecase
+	usecase usecases.Person_Usecase
 }
 
 type Handler interface {
@@ -19,7 +21,7 @@ type Handler interface {
 	Logout(*gin.Context)
 }
 
-func NewHandler(uc Usecase, router *gin.Engine) *RealHandler {
+func NewHandler(uc usecases.Person_Usecase, router *gin.Engine) *RealHandler {
 	return &RealHandler{
 		router:  router,
 		usecase: uc,
@@ -33,22 +35,23 @@ func (hdl *RealHandler) Standby(ctx context.Context) {
 }
 
 func (hdl *RealHandler) NewPerson(c *gin.Context) {
-	var newperson entity.Person
-	c.BindJSON(&newperson)
-	code := hdl.usecase.NewPerson(c, newperson)
-	c.IndentedJSON(code, "")
+	var NewPerson entity.Person
+	c.BindJSON(&NewPerson)
+	fmt.Println(NewPerson)
+	code := hdl.usecase.NewPerson(c, NewPerson)
+	c.IndentedJSON(code, "Insert Succesfull")
 }
 
 func (hdl *RealHandler) Login(c *gin.Context) {
-	var newperson entity.DTO_login
+	var newperson entity.Login_req
 	c.BindJSON(&newperson)
 	code := hdl.usecase.Login(c, newperson)
-	c.IndentedJSON(code, "")
+	c.IndentedJSON(code, "Successfully Login")
 }
 
 func (hdl *RealHandler) Logout(c *gin.Context) {
-	var newperson entity.DTO_login
+	var newperson entity.Login_req
 	c.BindJSON(&newperson)
 	code := hdl.usecase.Logout(c, newperson)
-	c.IndentedJSON(code, "")
+	c.IndentedJSON(code, "Succesfully Logout")
 }
